@@ -142,3 +142,28 @@ p + geom_text(x = 6, y = 40, aes(label = label), data = f_labels)
 p + annotate("text", x = 6, y = 42, label = "label text")
 
 # The following function gives a data frame with the value of r squared with each facet
+# These strings will be treated as R math expressions
+lm_labels <- function(dat) {
+  mod <- lm(hwy ~ displ, data = dat)
+  formula = sprintf("italic(y) == %.2f %.2f * italic(x)",
+                    round(coef(mod)[1], 2), round(coef(mod)[2], 2))
+  r <- cor(dat$displ, dat$hwy)
+  r2 <- sprintf("italic(R^2) == %.2f", r^2)
+  data.frame(formula = formula, r2 = r2, stringsAsFactors = F)
+}
+
+labels <- ddply(mpg, "drv", lm_labels)
+labels
+
+# Plot with formula and R^2 values
+p + geom_smooth(method = lm, se = F) + geom_text(x = 3, y = 40, aes(label = formula), data = labels, parse = T, hjust = 0) +
+  geom_text(x = 3, y = 35, aes(label = r2), data = labels, parse = T, hjust = 0)
+
+# We need to write our own function here because generating the linear model and extracting the
+# coeficients requires operating on each subset data frame directly
+# If we just want to display the r^2 values directly, it is possible to do something simpler
+labels <- ddply(mpg, "drv", summarise, r2 = cor(displ, hwy)^2)
+labels$r2 <- sprintf("italic(R^2) == %.2f", labels$r2)
+
+# Text geoms aren't the only ones that can be added individually to any facet; any geom can be
+# used as long as the input data is structured correctly

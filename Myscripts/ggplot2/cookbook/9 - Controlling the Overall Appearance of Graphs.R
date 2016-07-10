@@ -57,4 +57,73 @@ p + geom_text(aes(label = weightLb), size = 4, family = "times", colour = "red")
 
 
 ### Using themes
-# 
+# To use a premade theme, use theme_bw or theme_grey
+p <- ggplot(heightweight, aes(ageYear, heightIn)) + geom_point()
+
+# grey theme(default)
+p + theme_grey()
+
+# Black and white theme
+p + theme_bw()
+
+# We can create our own themes as well
+p + theme_grey(base_size = 16, base_family = "Times")
+
+# The default theme for the R session can be set using theme_set()
+
+
+
+### Changing the appearance of theme elements
+p <- ggplot(heightweight, aes(ageYear, heightIn, colour = sex)) + geom_point()
+
+# Formatting options for the plotting area
+p + theme(
+  panel.grid.major = element_line(colour = "red"),
+  panel.grid.minor = element_line(colour = "red", linetype = "dashed", size = .2),
+  panel.background = element_rect(fill = "lightblue"),
+  panel.border = element_rect(colour = "blue", fill = NA, size = 2)
+)
+
+# options for the text items
+p + ggtitle("Plot title here") +
+  theme(
+    axis.title.x = element_text(colour = "red", size = 14),
+    axis.text.x = element_text(colour = "blue"),
+    axis.title.y = element_text(colour = "red", size = 14, angle = 90),
+    axis.text.y = element_text(colour = "blue"),
+    plot.title = element_text(colour = "red", size = 20, face = "bold")
+  )
+
+# options for the legend
+p + theme(
+  legend.background = element_rect(fill = "grey85", colour = "red", size = 1),
+  legend.title = element_text(colour = "blue", face = "bold", size = 14),
+  legend.text = element_text(colour = "red"),
+  legend.key = element_rect(colour = "blue", size = .25)
+)
+
+# Options for facets
+p + facet_grid(sex ~ .) + theme(
+  strip.background = element_rect(fill = "pink"),
+  strip.text.y = element_text(size = 14, angle = -90, face = "bold")
+) # strip.text.x is for horizontal facets
+# way more details on theme elements in the book
+
+
+
+
+### Creating your own themess
+# we can create our own themes by adding elements to existing themes
+my_theme <- theme_bw() + theme(
+  text = element_text(colour = "red"),
+  axis.title = element_text(size = rel(1.25))
+)
+
+p + my_theme
+
+
+### Hiding gridlines
+p + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
+
+# it is possible to hide just the horizontal or vertical gridlines
+p + theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank()) 

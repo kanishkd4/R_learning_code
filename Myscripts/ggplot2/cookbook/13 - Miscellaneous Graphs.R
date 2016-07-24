@@ -8,7 +8,7 @@ library(scales)
 library(corrplot)
 library(igraph)
 library(rgl)
-
+install.packages("rgl")
 # There are many ways of visualizing data and some things don't fit into nice, tidy categories
 
 ### Making a corelation matrix
@@ -233,4 +233,56 @@ p + geom_tile() + scale_x_continuous(breaks = seq(1940, 1976, by = 4)) +
 
 
 ### Creating a 3D scatter plot
-# 
+# rgl provides an interface to the opengl graphics library for 3d graphics.
+# use plot3d() and pass a data frame where the first 3 columns are the x, y and z
+# coordinates or pass 3 vectors
+
+plot3d(mtcars$wt, mtcars$disp, mtcars$mpg, type = "s", size = .75, lit = F)
+# type = "s" gives spherical points
+# 3d plots are generally difficult to interpret but we can make it easier
+# we can add vertical segments to give a sense of the spatial positions of the 
+# points. 
+# function to interleave the elements of two vectors 
+interleave <- function(v1, v2) as.vector(rbind(v1, v2))
+
+# Plot the points
+plot3d(mtcars$wt, mtcars$disp, mtcars$mpg,
+       xlab = "Weight", ylab = "Displacement", zlab = "MPG",
+       size = .75, type = "s", lit = FALSE)
+# Add the segments
+segments3d(interleave(mtcars$wt, mtcars$wt),
+           interleave(mtcars$disp, mtcars$disp),
+           interleave(mtcars$mpg, min(mtcars$mpg)),
+           alpha = 0.4, col = "blue")
+
+# It's possible to tweak the appearance of the background and the axes
+
+# make the plot without axis or labels
+plot3d(mtcars$wt, mtcars$disp, mtcars$mpg,
+       xlab = "", ylab = "", zlab = "", axes = F,
+       size = .75, type = "s", lit = FALSE)
+
+segments3d(interleave(mtcars$wt, mtcars$wt),
+           interleave(mtcars$disp, mtcars$disp),
+           interleave(mtcars$mpg, min(mtcars$mpg)),
+           alpha = 0.4, col = "blue")
+
+# Draw the box
+rgl.bbox(colour = "grey50", emission = "grey50", xlen = 0, ylen = 0, zlen = 0)
+
+# Set the default colour of future objects to black
+rgl.material(color = "black")
+# Add axes to specific sides. Possible values are "x--", "x-+", "x+-", and "x++".
+axes3d(edges=c("x--", "y+-", "z--"),
+       ntick=6, # Attempt 6 tick marks on each side
+       cex=.75) # Smaller font
+# Add axis labels. 'line' specifies how far to set the label from the axis.
+mtext3d("Weight", edge="x--", line=2)
+mtext3d("Displacement", edge="y+-", line=3)
+mtext3d("MPG", edge="z--", line=3)
+
+
+
+
+### Adding a prediction surface to a 3D plot
+# First, we need to define some 

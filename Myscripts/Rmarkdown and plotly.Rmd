@@ -1,0 +1,37 @@
+---
+title: "Rmarkdown and Plotly"
+author: "Kanishk"
+date: "28 July 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Sample R-Markdown document
+This is a code block
+```{R code block 1, results = "hide"}
+# This is an R code chunks
+source("/media/kanishk/8E8481E28481CCE1/Learn/R/Myscripts/Yahoo Stock Data Pull.R")
+
+AAPL <- GetYahooData("AAPL")
+IBM <- GetYahooData("IBM")
+```
+My first plotly chart
+```{r code block 2, message = F, warning = F}
+# Plotly chart
+library(plotly)
+mat <- data.frame(Date = AAPL$Date,
+                  AAPL = round(AAPL$Adj.Close, 2),
+                  IBM = round(IBM$Adj.Close, 2))
+
+p <- mat %>% 
+  plot_ly(x = Date, y = AAPL, fill = "tozeroy", name = "Microsoft") %>%
+  add_trace(y = IBM, fill = "tonexty", name = "IBM") %>%
+  layout(title = "Stock Prices",
+         xaxis = list(title = "time"),
+         yaxis = list(title = "stock prices"))
+
+p 
+# That's it
+```

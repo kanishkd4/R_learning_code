@@ -26,7 +26,7 @@ mat <- data.frame(Date = AAPL$Date,
                   IBM = round(IBM$Adj.Close, 2))
 
 p <- mat %>% 
-  plot_ly(x = Date, y = AAPL, fill = "tozeroy", name = "Apple") %>%
+  plot_ly(x = Date, y = AAPL, fill = "tozeroy", name = "Microsoft") %>%
   add_trace(y = IBM, fill = "tonexty", name = "IBM") %>%
   layout(title = "Stock Prices",
          xaxis = list(title = "time"),

@@ -1,0 +1,50 @@
+---
+title: "Rmarkdown and knitr"
+author: "Kanishk"
+date: "15 August 2016"
+output: html_document
+---
+```{r code chunk1, echo = F, message = F}
+library(ggplot2); library(plotly)
+# Code chunks have options;
+# echo: FALSE will hide the R code from the output
+# eval = F will remove the code chunk from evaluation
+# message = F will remove any messages along with the output from the final HTML doc
+# results can be any of the following
+# markup - markup output using output hook
+# asis - raw output
+# hold - shows output after all code is evaluated
+# hide - no output is shown
+```
+
+# code chunk without any options specified
+```{r code chunk2}
+# plot diamonds using ggplot and plotly
+ggplot(diamonds[sample(1:nrow(diamonds), size = 1000),], aes(x = carat, y = price, 
+                                                             colour = clarity)) + geom_point()
+ggplotly()
+```
+
+# code chunk remove comments and change dimensions and alignment
+```{r code chunk3, message=F, echo=F, fig.align='left', fig.height=8, fig.width=8}
+# plot diamonds using ggplot and plotly
+ggplot(diamonds[sample(1:nrow(diamonds), size = 1000),], aes(x = carat, y = price, 
+                                                             colour = clarity)) + geom_point()
+ggplotly()
+```
+
+# Only show the Plotly output and not ggplot
+```{r code chunk4, message=F, echo=F, results='hide', include=F}
+ggplot(diamonds[sample(1:nrow(diamonds), size = 1000),], aes(x = carat, y = price, 
+                                                             colour = clarity)) + geom_point()
+```
+
+```{r code chunk5, message=F, echo=F}
+ggplotly()
+```
+
+```{r}
+#show a table
+library(knitr)
+kable(head(diamonds))
+```

@@ -267,3 +267,55 @@ lagpad <- function(x, k) c(rep(NA, k), x)[1:length(x)]
 dt[, indpct_slow := (ind/lagpad(ind, 1)) - 1, by = entity]
 head(dt, 10)
 
+
+
+
+
+
+
+############################################
+# Merging on range of numbers; used for length in merging based on length of names
+
+# used to import data
+Name	Len
+NK RAJVEER SINGH	16
+SAMIT BHATTACHARYYA	19
+SOMSANKAR BISWAS	16
+SURAJ SHA	9
+INDER SINGH YADAVA	18
+SEPHALI DASH	12
+RANJITH KUMAR M P	17
+INDER SINGH YADAVA	18
+
+Name	Len
+RAJVEER SINGH	13
+AMIT BHATTACHARYA	17
+SANKAR BISWAS	13
+SURAJ SHAW	10
+RAVINDER SINGH YADAV	20
+SEPHALI DAS	11
+RANJITH KUMAR M	15
+RAVINDER SINGH YADAV	20
+
+
+library(data.table)
+a <- as.data.table(read.table("clipboard", sep = "\t", header = T))
+b <- as.data.table(read.table("clipboard", sep = "\t", header = T))
+a[, Len := NULL]
+b[, Len := NULL]
+
+
+a[, ':='(
+  l1 = nchar(as.character(Name)) - 2,
+  l5 = nchar(as.character(Name)) + 2
+)]
+b[, ':='(
+  l1 = nchar(as.character(Name)) - 2,
+  l5 = nchar(as.character(Name)) + 2
+)]
+setkey(a, l1, l5)
+setkey(b, l1, l5)
+
+c <- foverlaps(a, b)
+class(c)
+
